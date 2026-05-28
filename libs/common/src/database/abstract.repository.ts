@@ -1,53 +1,50 @@
-import { Model, Types } from 'mongoose';
-import { AbstractDocument } from './abstract.schema'
 import { Logger, NotFoundException } from '@nestjs/common';
+import { AbstractEntity } from './abstract.schema';
+import { EntityManager, FindOptionsWhere, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export abstract class AbstractRepository<TDocument extends AbstractDocument> {
+export abstract class AbstractRepository<TEntity extends AbstractEntity<TEntity>> {
     protected abstract readonly logger: Logger;
-    constructor(protected readonly model: Model<TDocument>) { }
 
-    async create(document: Omit<TDocument, '_id'>): Promise<TDocument> {
-        const createDocument = new this.model({
-            ...document,
-            _id: new Types.ObjectId(),
-        });
-        return (await createDocument.save()).toJSON() as unknown as TDocument;
+    constructor(
+        protected readonly repository: Repository<TEntity>,
+        protected readonly entityManager: EntityManager,
+    ) { }
+
+    async create(entity: TEntity): Promise<TEntity> {
+        return this.entityManager.save(entity);
     }
 
-    async findOne(filterQuery: Record<string, unknown>): Promise<TDocument> {
-        const document = await this.model.findOne(filterQuery).lean<TDocument>(true);
+    async findOne(where: FindOptionsWhere<TEntity>): Promise<TEntity> {
+        const entity = await this.repository.findOne({ where });
 
-        if (!document) {
-            this.logger.warn('Document was not found with filterQuery', filterQuery)
-            throw new NotFoundException('Document was not found');
+        if (!entity) {
+            this.logger.warn('Entity was not found with where', where);
+            throw new NotFoundException('Entity was not found');
         }
-        return document;
+
+        return entity;
     }
 
     async findOneAndUpdate(
-        filterQuery: Record<string, unknown>,
-        update: Record<string, unknown>
-    ): Promise<TDocument> {
-        const document = await this.model.findByIdAndUpdate(filterQuery, update, {
-            new: true
-        }).lean<TDocument>(true);
-        if (!document) {
-            this.logger.warn('Document was not found with filterQuery', filterQuery)
-            throw new NotFoundException('Document was not found');
+        where: FindOptionsWhere<TEntity>,
+        update: QueryDeepPartialEntity<TEntity>,
+    ): Promise<TEntity> {
+        const updateResult = await this.repository.update(where, update);
+
+        if (!updateResult.affected) {
+            this.logger.warn('Entity was not found with where', where);
+            throw new NotFoundException('Entity was not found');
         }
-        return document;
+
+        return this.findOne(where);
     }
 
-    async find(filterQuery: Record<string, unknown>): Promise<TDocument[]> {
-        return this.model.find(filterQuery).lean<TDocument[]>(true);
+    async find(where: FindOptionsWhere<TEntity>): Promise<TEntity[]> {
+        return this.repository.find({ where });
     }
 
-    async FindOneAndDelete(filterQuery: Record<string, unknown>): Promise<TDocument> {
-        const document = await this.model.findOneAndDelete(filterQuery).lean<TDocument>(true);
-        if (!document) {
-            this.logger.warn('Document was not found with filterQuery', filterQuery)
-            throw new NotFoundException('Document was not found');
-        }
-        return document;
+    async findOneAndDelete(where: FindOptionsWhere<TEntity>): Promise<void> {
+        await this.repository.delete(where);
     }
 }
