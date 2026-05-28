@@ -10,5 +10,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  product-service:
+    build:
+      context: .
+      dockerfile: ./apps/product-service/src/product-service/Dockerfile
+      target: development
+    command: pnpm run start:dev product-service
+    ports:
+      - '3004:3004'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - POSTGRES_HOST=postgres
+      - PORT=3004
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
