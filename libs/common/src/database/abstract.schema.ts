@@ -1,8 +1,12 @@
-import { Prop, Schema } from "@nestjs/mongoose"
-import { SchemaTypes, Types } from "mongoose"
+import { PrimaryGeneratedColumn } from "typeorm"
 
-@Schema()
-export class AbstractDocument {
-    @Prop({ type: SchemaTypes.ObjectId })
-    _id: Types.ObjectId;
+export abstract class AbstractEntity<T> {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    constructor(entity?: Partial<T>) {
+        if (entity) {
+            Object.assign(this, entity);
+        }
+    }
 }
