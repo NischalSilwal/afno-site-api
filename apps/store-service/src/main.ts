@@ -6,6 +6,13 @@ import { Logger } from 'nestjs-pino';
 import { join } from 'path';
 import { StoreServiceModule } from './store-service.module';
 
+/**
+ * Bootstraps the Store microservice.
+ * - Uses Pino logger for structured logging
+ * - CORS restricted to frontend origins (3000, 3001)
+ * - Global ValidationPipe strips unknown fields and auto-transforms payloads
+ * - Serves uploaded static assets under /uploads
+ */
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(StoreServiceModule, { bufferLogs: true });
     app.useLogger(app.get(Logger));

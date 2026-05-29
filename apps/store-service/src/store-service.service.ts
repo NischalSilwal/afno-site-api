@@ -5,6 +5,12 @@ import { Store } from './models/store.entity';
 import { StoreSocialLink } from './models/store-social-link.entity';
 import { StoreRepository } from './store.repository';
 
+/**
+ * Orchestrates store CRUD operations.
+ * Maps DTOs to entity instances and delegates persistence to StoreRepository.
+ * Social links are managed as a separate entity with a OneToOne relation
+ * to avoid nullable columns cluttering the main store record.
+ */
 @Injectable()
 export class StoreServiceService {
     constructor(private readonly storeRepository: StoreRepository) { }
@@ -32,6 +38,8 @@ export class StoreServiceService {
         if (updateStoreDto.logo !== undefined) store.logo = updateStoreDto.logo;
         if (updateStoreDto.banner !== undefined) store.banner = updateStoreDto.banner;
 
+        // Merge social links rather than replacing — preserves existing links when only
+        // a subset is sent in the update payload. Creates a new relation if one doesn't exist.
         if (updateStoreDto.socialLinks !== undefined) {
             if (store.socialLinks) {
                 Object.assign(store.socialLinks, updateStoreDto.socialLinks);

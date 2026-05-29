@@ -7,7 +7,15 @@ import { Store } from './models/store.entity';
 import { StoreSocialLink } from './models/store-social-link.entity';
 import { StoreRepository } from './store.repository';
 
-
+/**
+ * StoreServiceModule
+ *
+ * Manages store CRUD operations, social links, and image uploads.
+ * Depends on:
+ * - DatabaseModule (TypeORM + PostgreSQL)
+ * - ImageProcessingModule for logo/banner compression
+ * - LoggerModule for structured logging
+ */
 @Module({
     imports: [
         LoggerModule,

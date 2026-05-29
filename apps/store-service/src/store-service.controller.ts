@@ -43,12 +43,14 @@ export class StoreServiceController {
     @Post('upload/logo')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
+            // Save logos under uploads/stores/logos/ with a timestamp to avoid name collisions
             destination: join(process.cwd(), 'uploads', 'stores', 'logos'),
             filename: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
                 cb(null, uniqueSuffix + extname(file.originalname));
             },
         }),
+        // Reject non-image uploads at the Multer level before the handler runs
         fileFilter: (_req: Request, file: Express.Multer.File, cb: (error: Error | null, acceptFile: boolean) => void) => {
             if (!file.mimetype.match(/^image\//)) {
                 return cb(new BadRequestException('Only image files are allowed!'), false);
@@ -61,6 +63,7 @@ export class StoreServiceController {
         if (!file) {
             throw new BadRequestException('No file uploaded');
         }
+        // Compress the uploaded logo to reduce storage and bandwidth
         await this.imageProcessingService.compress({ filePath: file.path });
         return { url: `/uploads/stores/logos/${file.filename}` };
     }
