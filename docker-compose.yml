@@ -15,9 +15,11 @@ services:
       context: .
       dockerfile: ./apps/product-service/src/product-service/Dockerfile
       target: development
-    command: pnpm run start:dev product-service
+    command: pnpm run start:debug product-service
     ports:
       - '3004:3004'
+      - '9229:9229'
+
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

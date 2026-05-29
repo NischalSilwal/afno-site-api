@@ -4,9 +4,11 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml ./
 
 RUN npm install -g pnpm
 
+ENV CI=true
 RUN pnpm install
 
 COPY . .
@@ -22,9 +24,11 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml ./
 
 RUN npm install -g pnpm
 
+ENV CI=true
 RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist

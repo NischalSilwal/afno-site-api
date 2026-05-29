@@ -1,14 +1,14 @@
-import { Logger, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 import { AbstractEntity } from './abstract.schema';
 import { EntityManager, FindOptionsWhere, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export abstract class AbstractRepository<TEntity extends AbstractEntity<TEntity>> {
-    protected abstract readonly logger: Logger;
-
     constructor(
         protected readonly repository: Repository<TEntity>,
         protected readonly entityManager: EntityManager,
+        protected readonly logger: Logger,
     ) { }
 
     async create(entity: TEntity): Promise<TEntity> {
