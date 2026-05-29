@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ProductServiceController } from './product-service.controller';
-import { ProductServiceService } from './product-service.service';
-import { DatabaseModule, LoggerModule } from '@app/common';
-import { Product } from './product-service/models/product.entity';
-import { ProductRepository } from './product-service/product-service.repository';
+import { DatabaseModule, LoggerModule, ConfigModule } from '@app/common';
+import { ProductModule } from './product/product.module';
 
+/**
+ * Main application module for the Product Service.
+ * Integrates shared modules and feature modules.
+ */
 @Module({
-  imports: [LoggerModule, DatabaseModule, DatabaseModule.forFeature([Product])],
-  controllers: [ProductServiceController],
-  providers: [ProductServiceService, ProductRepository],
+  imports: [ConfigModule, LoggerModule, DatabaseModule, ProductModule],
+  controllers: [],
+  providers: [],
 })
-export class ProductServiceModule { }
+export class ProductServiceModule {}
