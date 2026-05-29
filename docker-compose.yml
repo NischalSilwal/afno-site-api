@@ -13,7 +13,7 @@ services:
   product-service:
     build:
       context: .
-      dockerfile: ./apps/product-service/src/product-service/Dockerfile
+      dockerfile: ./apps/product-service/src/Dockerfile
       target: development
     command: pnpm run start:debug product-service
     ports:
