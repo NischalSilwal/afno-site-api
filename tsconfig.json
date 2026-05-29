@@ -24,6 +24,12 @@
       ],
       "@app/common/*": [
         "libs/common/src/*"
+      ],
+      "@app/image-processing": [
+        "libs/image-processing/src"
+      ],
+      "@app/image-processing/*": [
+        "libs/image-processing/src/*"
       ]
     }
   }

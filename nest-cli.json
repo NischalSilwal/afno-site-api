@@ -25,8 +25,25 @@
       "compilerOptions": {
         "tsConfigPath": "apps/product-service/tsconfig.app.json"
       }
+    },
+    "image-processing": {
+      "type": "library",
+      "root": "libs/image-processing",
+      "entryFile": "index",
+      "sourceRoot": "libs/image-processing/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/image-processing/tsconfig.lib.json"
+      }
+    },
+    "store-service": {
+      "type": "application",
+      "root": "apps/store-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/store-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/store-service/tsconfig.app.json"
+      }
     }
   },
-  "monorepo": true,
-  "root": "apps/product-service"
+  "monorepo": true
 }

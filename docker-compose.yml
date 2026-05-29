@@ -18,7 +18,7 @@ services:
     command: pnpm run start:debug product-service
     ports:
       - '3004:3004'
-      - '9229:9229'
+      - '9230:9229'
 
     volumes:
       - .:/usr/src/app
@@ -26,6 +26,25 @@ services:
     environment:
       - POSTGRES_HOST=postgres
       - PORT=3004
+    depends_on:
+      - postgres
+
+  store-service:
+    build:
+      context: .
+      dockerfile: ./apps/store-service/src/Dockerfile
+      target: development
+    command: pnpm run start:debug store-service
+    ports:
+      - '3005:3005'
+      - '9229:9229'
+
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - POSTGRES_HOST=postgres
+      - PORT=3005
     depends_on:
       - postgres
 
