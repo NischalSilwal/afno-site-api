@@ -13,6 +13,6 @@ export class Store extends AbstractEntity<Store> {
     @Column({ nullable: true })
     banner: string;
 
-    @OneToOne(() => StoreSocialLink, (storeSocialLink) => storeSocialLink.store, { cascade: true })
+    @OneToOne(() => StoreSocialLink, (storeSocialLink) => storeSocialLink.store, { cascade: true, eager: true })
     socialLinks: StoreSocialLink;
 }

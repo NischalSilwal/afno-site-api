@@ -4,8 +4,8 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import type { Request } from 'express';
 import { StoreServiceService } from './store-service.service';
-import { CreateStoreDto } from './store/dto/create-store.dto';
-import { UpdateStoreDto } from './store/dto/update-store.dto';
+import { CreateStoreDto } from './dto/create-store.dto';
+import { UpdateStoreDto } from './dto/update-store.dto';
 import { ImageProcessingService } from '@app/image-processing';
 
 @Controller('stores')
