@@ -3,10 +3,12 @@ import { NestFactory } from '@nestjs/core';
 import { ProductServiceModule } from './product-service.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger } from 'nestjs-pino';
 import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(ProductServiceModule);
+  const app = await NestFactory.create<NestExpressApplication>(ProductServiceModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
 
   const uploadsDir = join(process.cwd(), 'uploads');
 
