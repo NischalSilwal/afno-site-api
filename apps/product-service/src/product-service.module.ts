@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ProductService } from './product-service.service';
 import { ProductServiceController } from './product-service.controller';
-import { ProductServiceService } from './product-service.service';
-import { DatabaseModule, LoggerModule } from '@app/common';
-import { Product } from './product-service/models/product.entity';
-import { ProductRepository } from './product-service/product-service.repository';
+import { DatabaseModule } from '@app/common';
+import { ProductRepository } from './product-service.repository';
 
 @Module({
-  imports: [LoggerModule, DatabaseModule, DatabaseModule.forFeature([Product])],
+  imports: [DatabaseModule],
   controllers: [ProductServiceController],
-  providers: [ProductServiceService, ProductRepository],
+  providers: [ProductService, ProductRepository],
 })
 export class ProductServiceModule { }
