@@ -7,7 +7,9 @@ import { StoreServiceService } from './store-service.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { ImageProcessingService } from '@app/image-processing';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('stores')
 @Controller('stores')
 export class StoreServiceController {
     constructor(
