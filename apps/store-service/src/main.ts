@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from 'nestjs-pino';
 import { join } from 'path';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { StoreServiceModule } from './store-service.module';
 
 /**
@@ -16,6 +17,15 @@ import { StoreServiceModule } from './store-service.module';
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(StoreServiceModule, { bufferLogs: true });
     app.useLogger(app.get(Logger));
+
+    const config = new DocumentBuilder()
+        .setTitle('Store Service API')
+        .setDescription('Store service API description')
+        .setVersion('1.0')
+        .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
 
     const uploadsDir = join(process.cwd(), 'uploads');
 
